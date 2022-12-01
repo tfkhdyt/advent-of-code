@@ -1,30 +1,32 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"log"
-	"os"
-	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
 )
 
+//go:embed input.txt
+var rawInput string
+
 func main() {
-	const fileName = "input.txt"
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Panicln(err)
-	}
+	// const fileName = "input.txt"
+	// cwd, err := os.Getwd()
+	// if err != nil {
+	// 	log.Panicln(err)
+	// }
 
-	filePath := filepath.Join(cwd, fileName)
+	// filePath := filepath.Join(cwd, fileName)
 
-	rawInput, err := os.ReadFile(filePath)
-	if err != nil {
-		log.Panicln(err)
-	}
+	// rawInput, err := os.ReadFile(filePath)
+	// if err != nil {
+	// 	log.Panicln(err)
+	// }
 
-	elvesFoodsRawCalories := strings.Split(string(rawInput), "\n\n")
+	elvesFoodsRawCalories := strings.Split(rawInput, "\n\n")
 
 	elvesFoodsCalories := []uint64{}
 
@@ -51,14 +53,14 @@ func main() {
 		return elvesFoodsCalories[i] > elvesFoodsCalories[j]
 	})
 
-  elvesFoodsCalories = elvesFoodsCalories[:3]
+	elvesFoodsCalories = elvesFoodsCalories[:3]
 
 	fmt.Printf("Most calories: %v\n", elvesFoodsCalories[0])
 
 	var totalCaloriesOf3Elves uint64 = 0
-  for _, calories := range elvesFoodsCalories {
-    totalCaloriesOf3Elves += calories
-  }
+	for _, calories := range elvesFoodsCalories {
+		totalCaloriesOf3Elves += calories
+	}
 
 	fmt.Printf("Total calories carried by top 3 elves: %v\n", totalCaloriesOf3Elves)
 }
