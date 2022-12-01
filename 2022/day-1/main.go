@@ -58,6 +58,5 @@ func main() {
 		totalCaloriesOf3Elves += elvesFoodsCalories[i]
 	}
 
-  fmt.Printf("Total calories carried by top 3 elves: %v", totalCaloriesOf3Elves) 
+	fmt.Printf("Total calories carried by top 3 elves: %v", totalCaloriesOf3Elves)
 }
-
