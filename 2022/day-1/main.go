@@ -52,8 +52,6 @@ func main() {
 	})
 
 	fmt.Printf("Most calories: %v\n", elvesFoodsCalories[0])
-	// fmt.Printf("Most calories #2: %v\n", elvesFoodsCalories[1])
-	// fmt.Printf("Most calories #3: %v\n", elvesFoodsCalories[2])
 
 	var totalCaloriesOf3Elves uint64 = 0
 	for i := 0; i < 3; i++ {
