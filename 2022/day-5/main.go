@@ -8,17 +8,48 @@ import (
 	"strings"
 )
 
+func moveStack1(stacks *[][]string, from uint8, to uint8) {
+	// get popped crate
+	crate := (*stacks)[from-1][len((*stacks)[from-1])-1]
+
+	// remove last crate on "from" stack
+	(*stacks)[from-1] = (*stacks)[from-1][:len((*stacks)[from-1])-1]
+
+	// push crate to new stack
+	(*stacks)[to-1] = append((*stacks)[to-1], crate)
+}
+
+func moveStack2(stacks *[][]string, moveN, from, to uint8) {
+	// get popped n crates
+	crate := (*stacks)[from-1][len((*stacks)[from-1])-int(moveN):]
+
+	// remove n last crates on "from" stack
+	(*stacks)[from-1] = (*stacks)[from-1][:len((*stacks)[from-1])-int(moveN)]
+
+	// push crates to new stack
+	(*stacks)[to-1] = append((*stacks)[to-1], crate...)
+}
+
+func getTopStack(stacks *[][]string) string {
+	topStack := []string{}
+	for _, v := range *stacks {
+		topStack = append(topStack, v[len(v)-1])
+	}
+
+	return strings.Join(topStack, "")
+}
+
 func main() {
-  // read raw input from text file
+	// read raw input from text file
 	rawInput, err := os.Open("input.txt")
 	if err != nil {
 		log.Panicln(err)
 	}
 
-  // create file scanner
+	// create file scanner
 	fileScanner := bufio.NewScanner(rawInput)
 
-  // create initial stacks
+	// create initial stacks
 	stacks1 := [][]string{
 		{"B", "P", "N", "Q", "H", "D", "R", "T"},
 		{"W", "G", "B", "J", "T", "V"},
@@ -33,9 +64,9 @@ func main() {
 	stacks2 := make([][]string, len(stacks1))
 	copy(stacks2, stacks1)
 
-  // loop over input by line
+	// loop over input by line
 	for fileScanner.Scan() {
-    // parse line string to variables
+		// parse line string to variables
 		line := fileScanner.Text()
 		var moveN, from, to uint8
 		fmt.Sscanf(line, "move %d from %d to %d", &moveN, &from, &to)
@@ -47,40 +78,12 @@ func main() {
 		moveStack2(&stacks2, moveN, from, to)
 	}
 
-  // part 1
-	topStack1 := []string{}
-	for _, v := range stacks1 {
-		topStack1 = append(topStack1, v[len(v)-1])
-	}
-	fmt.Printf("topStack 1: %v\n", strings.Join(topStack1, ""))
+	// part 1
+	topStack1 := getTopStack(&stacks1)
+	fmt.Printf("topStack 1: %v\n", topStack1)
 
-  // part 2
-	topStack2 := []string{}
-	for _, v := range stacks2 {
-		topStack2 = append(topStack2, v[len(v)-1])
-	}
-
-	fmt.Printf("topStack 2: %v\n", strings.Join(topStack2, ""))
+	// part 2
+	topStack2 := getTopStack(&stacks2)
+	fmt.Printf("topStack 2: %v\n", topStack2)
 }
 
-func moveStack1(stacks *[][]string, from uint8, to uint8) {
-	// get popped crate
-	crate := (*stacks)[from-1][len((*stacks)[from-1])-1]
-
-	// remove last crate on "from" stack
-	(*stacks)[from-1] = (*stacks)[from-1][:len((*stacks)[from-1])-1]
-
-	// push crate to new stack
-	(*stacks)[to-1] = append((*stacks)[to-1], crate)
-}
-
-func moveStack2(stacks *[][]string, moveN, from, to uint8) {
-	// get popped n crates
-  crate := (*stacks)[from-1][len((*stacks)[from-1])-int(moveN):]
-
-	// remove n last crates on "from" stack
-	(*stacks)[from-1] = (*stacks)[from-1][:len((*stacks)[from-1])-int(moveN)]
-
-	// push crates to new stack
-	(*stacks)[to-1] = append((*stacks)[to-1], crate...)
-}
