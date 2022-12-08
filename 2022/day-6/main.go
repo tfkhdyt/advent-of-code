@@ -23,16 +23,16 @@ func isContainsDuplicate[T comparable](slice []T) bool {
 	return false
 }
 
-func getFirstMarkerIndex(input *string, size int) int {
+func getFirstMarkerIndex(input *string, size int, ch chan int) {
+	defer close(ch)
 	for i := size; i < len(*input); i++ {
 		a := strings.Split((*input)[i-size:i], "")
 
 		if !isContainsDuplicate(a) {
-			return i
+			ch <- i
+			return
 		}
 	}
-
-	return 0
 }
 
 func main() {
@@ -43,9 +43,28 @@ func main() {
 
 	input := strings.TrimSpace(string(rawInput))
 
-	part1 := getFirstMarkerIndex(&input, 4)
-	part2 := getFirstMarkerIndex(&input, 14)
+	part1 := make(chan int)
+	go getFirstMarkerIndex(&input, 4, part1)
 
-	fmt.Printf("part1: %v\n", part1)
-	fmt.Printf("part2: %v\n", part2)
+	part2 := make(chan int)
+	go getFirstMarkerIndex(&input, 14, part2)
+
+	for {
+		select {
+		case packet, ok := <-part1:
+			if ok {
+				fmt.Printf("packet (part 1): %v\n", packet)
+				part1 = nil
+			}
+		case message, ok := <-part2:
+			if ok {
+				fmt.Printf("message (part 2): %v\n", message)
+				part2 = nil
+			}
+		}
+
+		if part1 == nil && part2 == nil {
+			break
+		}
+	}
 }
